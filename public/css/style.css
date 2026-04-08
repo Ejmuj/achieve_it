@@ -29,3 +29,28 @@ h1 {
     font-size: 40px;
     color: white;
 }
+
+#games-container,
+#achievements-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.game-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+.achievement-card {
+    background: rgb(208, 208, 208);
+    padding: 10px;
+    border-radius: 8px;
+    width: 250px;
+    height: 300px;
+}
