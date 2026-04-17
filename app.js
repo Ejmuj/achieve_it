@@ -14,7 +14,8 @@ const saltRounds = 10;
 const app = express();
 const staticPath = path.join(__dirname, 'public');
 
-// -------------------- CORE MIDDLEWARE --------------------
+// -------------------- CORE MIDDLEWARE -----------------------------------------//
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -25,9 +26,29 @@ app.use(session({
     saveUninitialized: false
 }));
 
-app.use(express.static(staticPath));
 
-//-----------------------games--------------------------------------------------//
+// -------------------- AUTH MIDDLEWARE -----------------------------------------//
+
+
+function requireAuth(req, res, next) {
+  if (!req.session.loggedIn) {
+    return res.redirect("/login");
+  }
+  next();
+}
+
+//----------------------- ROUTES ------------------------------------------------//
+
+app.get("/", requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "html", "login.html"));
+});
+
+
+//----------------------- GAMES --------------------------------------------------//
 
 app.get('/games', (req, res)=>{
 
@@ -46,7 +67,10 @@ app.get('/games', (req, res)=>{
 
 });
 
-//-----------------------Achivements--------------------------------------------//
+
+
+
+//----------------------- ACHIEVEMNTS --------------------------------------------//
 
 app.get('/achievements/:gameId', (req, res) => {
     const gameId = req.params.gameId;
@@ -64,13 +88,78 @@ app.get('/achievements/:gameId', (req, res) => {
     res.json(achievements);
 });
 
+//----------------------- AUTH ROUTES ---------------------------------------------//
+
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+
+    const user = db
+        .prepare("SELECT * FROM person WHERE username = ?")
+        .get(username);
+
+
+    if (!user) {
+        return res.send("User not found");
+    }
+
+    const passwordMatch = bcrypt.compareSync(password, user.password);
+
+    if (!passwordMatch) {
+        return res.send("Wrong password");
+    }
+
+    req.session.loggedIn = true;
+    req.session.username = user.username;
+    req.session.userid = user.id;
+
+    return res.redirect('/');
+});
+
+
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
+
+    const existingUser = db
+        .prepare("SELECT * FROM person WHERE username = ?")
+        .get(username);
+
+    if (existingUser) {
+        return res.send("Username already taken");
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, saltRounds);
+
+    const result = db
+        .prepare("INSERT INTO person (username, password) VALUES (?, ?)")
+        .run(username, hashedPassword);
+
+    req.session.loggedIn = true;
+    req.session.username = username;
+    req.session.userid = result.lastInsertRowid;
+
+    return res.redirect('/');
+});
 
 
 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.sendFile(path.join(__dirname, "/login"));
+});
+
+app.get('/games', (req, res) => {
+    const sql = db.prepare('SELECT id, name FROM game');
+    res.json(sql.all());
+});
 
 
+//------------------------------- STATIC FILES ---------------------------------------------------------------//
 
+app.use(express.static(staticPath));
 
+//----------------------------- KJØRE SERVER --------------------------------------------------------------//
 
 app.listen(3000, () => {
     console.log("Server is running on http://localhost:3000");

@@ -24,6 +24,30 @@ body {
     justify-content: center;
 }
 
+.header2{
+    background-color: rgb(209, 241, 250);
+    padding: 1rem;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+    justify-content: center;
+}
+
+button {
+    background-color: rgb(203, 241, 255);
+    border-radius: 5px;
+    height: 30px;
+}
+
+button:hover {
+    height: 40px;
+    width: 200px;
+    background-color: rgb(139, 197, 255);
+}
   
 h1 {
     font-size: 40px;
@@ -53,4 +77,75 @@ h1 {
     border-radius: 8px;
     width: 250px;
     height: 300px;
+}
+
+
+
+
+
+
+/*---------------------------- MENY -----------------------------------*/
+
+
+
+.menuButton {
+    position: relative;
+    z-index: 10000;
+    transition: transform 0.3s ease;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    right: -300px; /* hidden off-screen */
+    width: 250px;
+    height: 100%;
+    background:   rgb(186, 240, 255);
+    padding: 20px;
+    transition: right 0.3s ease; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menuButton.active {
+    transform: translateX(120px);
+}
+
+.menu.active {
+    right: 0;
+}
+
+.menuButton2 {
+    position: relative;
+    z-index: 10000;
+    transition: transform 0.3s ease;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+}
+
+.menu2 {
+    position: fixed;
+    top: 0;
+    right: -300px; /* hidden off-screen */
+    width: 250px;
+    height: 100%;
+    background:   rgb(186, 240, 255);
+    padding: 20px;
+    transition: right 0.3s ease; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menuButton2.active {
+    transform: translateX(120px);
+}
+
+.menu2.active {
+    right: 0;
 }

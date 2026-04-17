@@ -1,6 +1,6 @@
 let openGameId = null;
 
-// ---------------- LOAD GAMES ----------------
+// ---------------- LOAD GAMES ---------------- //
 async function loadGames() {
     try {
         const response = await fetch('/games');
@@ -41,7 +41,7 @@ async function loadGames() {
     }
 }
 
-// ---------------- LOAD ACHIEVEMENTS ----------------
+// ---------------- LOAD ACHIEVEMENTS ---------------- //
 async function loadAchievements(gameId) {
     const res = await fetch(`/achievements/${gameId}`);
     const achievements = await res.json();
@@ -62,6 +62,10 @@ async function loadAchievements(gameId) {
         container.appendChild(div);
     });
 }
+
+
+
+
 
 // start app
 loadGames();

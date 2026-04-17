@@ -15,11 +15,69 @@
 
     </header>
 
+    <header2 class="header2">
+
+            <button id="menuButton">
+                <p>Register new game:</p>
+            </button>
+
+            <div id="sidemenu" class="menu">
+
+                <label for="chooseGame">Wright down the videogame:</label>
+                <input type="text" id="chooseGame">
+
+                <button id="Submit">Submit</button>
+
+            </div>
+
+            <button id="menuButton2">
+                <p>Register new achievement:</p>
+            </button>
+
+            <div id="sidemenu2" class="menu2">
+
+
+                <label for="gameSelect">Choose the videogame that the achievemnt is from</label>
+                <select id="gameSelect">
+                    <option value="">Choose game:</option>
+                </select>
+
+                <label for="chooseAchievemnt">Wright down the achievement:</label>
+                <input type="text" id="chooseAchievemnt">
+
+                <button id="Submit">Submit</button>
+
+            </div>
+
+    </header2>
+
     <div id="games-container"></div>
 
     <div id="achievements-container"></div>
 
-    <script src="/achieve.js"></script>
+    <script>
+
+        async function laodGameOptions(){
+            const res = await fetch('/games', {
+                credentials: 'include'
+            });
+
+            const game = await res.json();
+
+            const select = document.getElementById("gameSelect");
+
+            game.forEach(f => {
+                const option = document.createElement("option");
+                option.value = f.id;
+                option.textContent = f.name;
+                select.appendChild(option);
+            });
+
+        };
+    </script>
+
+    <script src="./js/achieve.js"></script>
+    <script src="./js/meny.js"></script>
     
 </body>
 </html>
