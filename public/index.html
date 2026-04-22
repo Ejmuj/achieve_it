@@ -22,12 +22,16 @@
             </button>
 
             <div id="sidemenu" class="menu">
+                <form id="gameForm">
+                    <label for="chooseGame">Wright down the videogame:</label>
+                    <input type="text" id="chooseGame">
+                    <p></p> <!-- liker å bruke p for mellomrom -->
+                    <label for="picture">Insert image link if you want here:</label>
+                    <p></p>
+                    <input type="text" id="image">
 
-                <label for="chooseGame">Wright down the videogame:</label>
-                <input type="text" id="chooseGame">
-
-                <button id="Submit">Submit</button>
-
+                    <button id="submit">Submit</button>
+                </form>
             </div>
 
             <button id="menuButton2">
@@ -37,7 +41,7 @@
             <div id="sidemenu2" class="menu2">
 
 
-                <label for="gameSelect">Choose the videogame that the achievemnt is from</label>
+                <label for="gameSelect">Choose the videogame that the achievement is from</label>
                 <select id="gameSelect">
                     <option value="">Choose game:</option>
                 </select>
@@ -45,7 +49,7 @@
                 <label for="chooseAchievemnt">Wright down the achievement:</label>
                 <input type="text" id="chooseAchievemnt">
 
-                <button id="Submit">Submit</button>
+                <button id="Submit2">Submit</button>
 
             </div>
 
@@ -56,24 +60,18 @@
     <div id="achievements-container"></div>
 
     <script>
+        const form = document.getElementById('gameForm');
+        const submit2 = document.getElementById('Submit2')
 
-        async function laodGameOptions(){
-            const res = await fetch('/games', {
-                credentials: 'include'
-            });
+        window.addEventListener("DOMContentLoaded", () => {
+            loadGameOptions();
+        });
 
-            const game = await res.json();
+        form.addEventListener('submit', (e)=> {
+            e.preventDefault();
+            submitGames();
+        });
 
-            const select = document.getElementById("gameSelect");
-
-            game.forEach(f => {
-                const option = document.createElement("option");
-                option.value = f.id;
-                option.textContent = f.name;
-                select.appendChild(option);
-            });
-
-        };
     </script>
 
     <script src="./js/achieve.js"></script>

@@ -48,28 +48,6 @@ app.get("/login", (req, res) => {
 });
 
 
-//----------------------- GAMES --------------------------------------------------//
-
-app.get('/games', (req, res)=>{
-
-    const games = db.prepare(`
-
-        Select 
-        id,
-        name, 
-        picture 
-        From game
-
-
-    `).all();
-
-    res.json(games);
-
-});
-
-
-
-
 //----------------------- ACHIEVEMNTS --------------------------------------------//
 
 app.get('/achievements/:gameId', (req, res) => {
@@ -150,8 +128,24 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/games', (req, res) => {
-    const sql = db.prepare('SELECT id, name FROM game');
+    const sql = db.prepare('SELECT id, name, picture FROM game');
     res.json(sql.all());
+});
+
+app.get('/myGames', (req, res) => {
+    const sql = db.prepare('SELECT id, name, picture FROM person_games');
+    res.json(sql.all());
+});
+
+app.post('/newGame', (req, res) => {
+    const { game, image } = req.body;
+
+    db.prepare(`
+        INSERT INTO person_games(name, picture)
+        VALUES (?, ?)
+    `).run(game, image);
+
+    res.sendStatus(200);
 });
 
 

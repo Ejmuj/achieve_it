@@ -61,6 +61,7 @@ h1 {
     gap: 20px;
     padding: 20px;
     text-align: center;
+    background-color: aliceblue;
 }
 
 .game-card img {
@@ -72,7 +73,7 @@ h1 {
 
 
 .achievement-card {
-    background: rgb(208, 208, 208);
+    background: rgb(195, 219, 255);
     padding: 10px;
     border-radius: 8px;
     width: 250px;

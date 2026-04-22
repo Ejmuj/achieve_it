@@ -1,45 +1,78 @@
 let openGameId = null;
 
 // ---------------- LOAD GAMES ---------------- //
-async function loadGames() {
-    try {
-        const response = await fetch('/games');
-        const games = await response.json();
+async function loadAllGames() {
+    const [gamesRes, myGamesRes] = await Promise.all([
+        fetch('/games'),
+        fetch('/myGames')
+    ]);
 
-        const container = document.getElementById('games-container');
+    const games = await gamesRes.json();
+    const myGames = await myGamesRes.json();
 
-        games.forEach(game => {
-            const gameDiv = document.createElement('div');
-            gameDiv.className = "game-card";
+    const container = document.getElementById('games-container');
+    container.innerHTML = "";
 
-            gameDiv.innerHTML = `
-                <h2>${game.name}</h2>
-                <img src="${game.picture}" alt="${game.name}">
-            `;
+    const allGames = [...games, ...myGames];
 
-            gameDiv.addEventListener("click", () => {
+    allGames.forEach(game => {
+        const gameDiv = document.createElement('div');
+        gameDiv.className = "game-card";
 
-                const achievementsContainer = document.getElementById("achievements-container");
+        gameDiv.innerHTML = `
+            <h2>${game.name}</h2>
+            <img src="${game.picture}" alt="${game.name}">
+        `;
 
-                // toggle close
-                if (openGameId === game.id) {
-                    achievementsContainer.innerHTML = "";
-                    openGameId = null;
-                    return;
-                }
+        gameDiv.addEventListener("click", () => {
+            const achievementsContainer = document.getElementById("achievements-container");
 
-                // open new
-                openGameId = game.id;
-                loadAchievements(game.id);
-            });
+            // toggle close
+            if (openGameId === game.id) {
+                achievementsContainer.innerHTML = "";
+                openGameId = null;
+                return;
+            }
 
-            container.appendChild(gameDiv);
+            openGameId = game.id;
+            loadAchievements(game.id);
         });
 
-    } catch (error) {
-        console.error('Error loading games:', error);
+        container.appendChild(gameDiv);
+    });
+}
+
+
+
+async function loadGameOptions(){
+    try {
+        const [gamesRes, myGamesRes] = await Promise.all([
+            fetch('/games'),
+            fetch('/myGames')
+        ]);
+
+        const games = await gamesRes.json();
+        const myGames = await myGamesRes.json();
+
+        const allGames = [...games, ...myGames];
+
+        const select = document.getElementById("gameSelect");
+
+        select.innerHTML = `<option value="">Choose game:</option>`;
+
+        allGames.forEach(i => {
+            const option = document.createElement("option");
+            option.value = i.id;
+            option.textContent = i.name;
+            select.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("loadGameOptions error:", err);
     }
 }
+
+
 
 // ---------------- LOAD ACHIEVEMENTS ---------------- //
 async function loadAchievements(gameId) {
@@ -63,9 +96,26 @@ async function loadAchievements(gameId) {
     });
 }
 
+// -------------------- SUBMIT -----------------------//
+
+async function submitGames(){
+    const game = document.getElementById("chooseGame").value;
+    const image = document.getElementById("image").value;
+
+    if(!game){
+        alert("fill in all fields")
+        return;
+    }
+
+    await fetch("/newGame", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ game, image })
+    });
+
+    alert("game submitted");
+}
 
 
 
-
-// start app
-loadGames();
+loadAllGames();
