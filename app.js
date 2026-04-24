@@ -132,22 +132,28 @@ app.get('/games', (req, res) => {
     res.json(sql.all());
 });
 
-app.get('/myGames', (req, res) => {
-    const sql = db.prepare('SELECT id, name, picture FROM person_games');
-    res.json(sql.all());
-});
 
 app.post('/newGame', (req, res) => {
     const { game, image } = req.body;
 
     db.prepare(`
-        INSERT INTO person_games(name, picture)
+        INSERT INTO game(name, picture)
         VALUES (?, ?)
     `).run(game, image);
 
     res.sendStatus(200);
 });
 
+app.post('/newAchievement', (req, res) => {
+    const { gameId, name, description, image2 } = req.body;
+
+    db.prepare(`
+        INSERT INTO achievements(name, description, image, id_game)
+        VALUES (?, ?, ?, ?)
+    `).run(name, description, image2, gameId);
+
+    res.sendStatus(200);
+});
 
 //------------------------------- STATIC FILES ---------------------------------------------------------------//
 

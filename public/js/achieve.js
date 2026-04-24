@@ -2,20 +2,15 @@ let openGameId = null;
 
 // ---------------- LOAD GAMES ---------------- //
 async function loadAllGames() {
-    const [gamesRes, myGamesRes] = await Promise.all([
-        fetch('/games'),
-        fetch('/myGames')
-    ]);
+    const gamesRes = await fetch('/games');
 
     const games = await gamesRes.json();
-    const myGames = await myGamesRes.json();
 
     const container = document.getElementById('games-container');
     container.innerHTML = "";
 
-    const allGames = [...games, ...myGames];
 
-    allGames.forEach(game => {
+    games.forEach(game => {
         const gameDiv = document.createElement('div');
         gameDiv.className = "game-card";
 
@@ -46,21 +41,15 @@ async function loadAllGames() {
 
 async function loadGameOptions(){
     try {
-        const [gamesRes, myGamesRes] = await Promise.all([
-            fetch('/games'),
-            fetch('/myGames')
-        ]);
+        const gameRes = await fetch('/games')
 
-        const games = await gamesRes.json();
-        const myGames = await myGamesRes.json();
-
-        const allGames = [...games, ...myGames];
+        const games = await gameRes.json();
 
         const select = document.getElementById("gameSelect");
 
         select.innerHTML = `<option value="">Choose game:</option>`;
 
-        allGames.forEach(i => {
+        games.forEach(i => {
             const option = document.createElement("option");
             option.value = i.id;
             option.textContent = i.name;
@@ -115,6 +104,33 @@ async function submitGames(){
 
     alert("game submitted");
 }
+
+async function submitAchievements() {
+    const gameId = document.getElementById("gameSelect").value;
+    const name = document.getElementById("chooseAchievemnt").value;
+    const description = document.getElementById("description").value;
+    const image2 = document.getElementById("imageUrl").value;
+
+    if (!gameId || !name) {
+        alert("Please fill in required fields");
+        return;
+    }
+
+
+    await fetch("/newAchievement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            gameId,
+            name,
+            description,
+            image2
+        })
+    });
+
+    alert("Achievement submitted");
+}
+
 
 
 

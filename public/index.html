@@ -40,16 +40,23 @@
 
             <div id="sidemenu2" class="menu2">
 
+                <form id="gameForm2">
+                    <label for="gameSelect">Choose the videogame that the achievement is from</label>
+                    <select id="gameSelect">
+                        <option value="">Choose game:</option>
+                    </select>
 
-                <label for="gameSelect">Choose the videogame that the achievement is from</label>
-                <select id="gameSelect">
-                    <option value="">Choose game:</option>
-                </select>
+                    <label for="chooseAchievemnt">Wright down the achievement:</label>
+                    <input type="text" id="chooseAchievemnt">
 
-                <label for="chooseAchievemnt">Wright down the achievement:</label>
-                <input type="text" id="chooseAchievemnt">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description">
 
-                <button id="Submit2">Submit</button>
+                    <label for="imageUrl">Image URL:</label>
+                    <input type="text" id="imageUrl">
+
+                    <button id="Submit2">Submit</button>
+                </form>
 
             </div>
 
@@ -61,7 +68,7 @@
 
     <script>
         const form = document.getElementById('gameForm');
-        const submit2 = document.getElementById('Submit2')
+        const form2 = document.getElementById('gameForm2')
 
         window.addEventListener("DOMContentLoaded", () => {
             loadGameOptions();
@@ -71,6 +78,11 @@
             e.preventDefault();
             submitGames();
         });
+
+        form2.addEventListener('submit', (e)=> {
+            e.preventDefault
+            submitAchievements();
+        })
 
     </script>
 
