@@ -132,6 +132,10 @@ app.get('/games', (req, res) => {
     res.json(sql.all());
 });
 
+app.get('/achi', (req, res) => {
+    const sql = db.prepare('SELECT id, name, image FROM achievements');
+    res.json(sql.all());
+});
 
 app.post('/newGame', (req, res) => {
     const { game, image } = req.body;
@@ -143,6 +147,42 @@ app.post('/newGame', (req, res) => {
 
     res.sendStatus(200);
 });
+
+app.post('/deleteG', (req, res) => {
+    const { id } = req.body;
+
+    try {
+        // delete child rows first
+        db.prepare('DELETE FROM achievements WHERE id_game = ?').run(id);
+
+        // then delete the game
+        const result = db.prepare('DELETE FROM game WHERE id = ?').run(id);
+
+        res.json({ success: true, deleted: result.changes });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Delete failed" });
+    }
+});
+
+app.post('/deleteA', (req, res) => {
+    const { id } = req.body;
+
+    console.log('Deleting ID:', id);
+    
+    try {
+
+        db.prepare('DELETE FROM achievements WHERE id = ?').run(id);
+
+        res.json({ success: true, deleted: result.changes });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Delete failed" });
+    }
+});
+
 
 app.post('/newAchievement', (req, res) => {
     const { gameId, name, description, image2 } = req.body;

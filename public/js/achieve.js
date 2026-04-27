@@ -39,21 +39,22 @@ async function loadAllGames() {
 
 
 
-async function loadGameOptions(){
+async function loadGameOptions() {
     try {
-        const gameRes = await fetch('/games')
-
+        const gameRes = await fetch('/games');
         const games = await gameRes.json();
 
-        const select = document.getElementById("gameSelect");
+        const selects = document.querySelectorAll(".gameSelect");
 
-        select.innerHTML = `<option value="">Choose game:</option>`;
+        selects.forEach(select => {
+            select.innerHTML = `<option value="">Choose game:</option>`;
 
-        games.forEach(i => {
-            const option = document.createElement("option");
-            option.value = i.id;
-            option.textContent = i.name;
-            select.appendChild(option);
+            games.forEach(i => {
+                const option = document.createElement("option");
+                option.value = i.id;
+                option.textContent = i.name;
+                select.appendChild(option);
+            });
         });
 
     } catch (err) {
@@ -61,6 +62,26 @@ async function loadGameOptions(){
     }
 }
 
+async function loadAchiOptions() {
+    try {
+        const res = await fetch('/achi');
+        const achievements = await res.json();
+
+        const select = document.getElementById('achiSelect');
+
+        select.innerHTML = `<option value="">Choose achievement:</option>`;
+
+        achievements.forEach(a => {
+            const option = document.createElement("option");
+            option.value = a.id;
+            option.textContent = a.name;
+            select.appendChild(option);
+        });
+
+    } catch (err) {
+        console.error("loadAchiOptions error:", err);
+    }
+}
 
 
 // ---------------- LOAD ACHIEVEMENTS ---------------- //
@@ -106,7 +127,7 @@ async function submitGames(){
 }
 
 async function submitAchievements() {
-    const gameId = document.getElementById("gameSelect").value;
+    const gameId = document.getElementById("selectId").value;
     const name = document.getElementById("chooseAchievemnt").value;
     const description = document.getElementById("description").value;
     const image2 = document.getElementById("imageUrl").value;
@@ -131,7 +152,36 @@ async function submitAchievements() {
     alert("Achievement submitted");
 }
 
+//--------------------- Delete ---------------------------//
+
+async function DeleteGame() {
+    const game = document.getElementById('gameSelect').value;
+
+   
+
+        await fetch("/deleteG", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: game })
+        });
 
 
+        alert('deleted game')
+}
+
+async function DeleteAchievement() {
+    const achi = document.getElementById('achiSelect').value;
+
+    console.log('Selected:', achi);
+
+    await fetch("/deleteA", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: achi })
+        });
+    
+        alert('deleted achievement')
+}
 
 loadAllGames();
+loadAchiOptions()

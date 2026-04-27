@@ -42,7 +42,7 @@
 
                 <form id="gameForm2">
                     <label for="gameSelect">Choose the videogame that the achievement is from</label>
-                    <select id="gameSelect">
+                    <select class="gameSelect" id="selectId">
                         <option value="">Choose game:</option>
                     </select>
 
@@ -59,6 +59,26 @@
                 </form>
 
             </div>
+            <button id="menuButton3">
+                <p>Delete</p>
+            </button>
+
+            <div id="sidemenu3" class="menu3">
+                <form id="gameForm3">
+                    <label for="delete">Chosse what you want to delete:</label>
+                    <select class="gameSelect" id="gameSelect"> <!-- Denne har id for å kunne slette og seperere fra første gameSelect -->
+                        <option value="">Choose game:</option>
+                    </select>
+
+                    <select id="achiSelect">
+                        <option value="">Choose Achievement:</option>
+                    </select>
+
+                    <button id="submit3">Submit</button>
+
+                </form>
+
+            </div>
 
     </header2>
 
@@ -69,6 +89,7 @@
     <script>
         const form = document.getElementById('gameForm');
         const form2 = document.getElementById('gameForm2')
+        const form3 = document.getElementById('gameForm3')
 
         window.addEventListener("DOMContentLoaded", () => {
             loadGameOptions();
@@ -80,8 +101,14 @@
         });
 
         form2.addEventListener('submit', (e)=> {
-            e.preventDefault
+            e.preventDefault();
             submitAchievements();
+        })
+
+        form3.addEventListener('submit', (e)=> {
+            e.preventDefault
+            DeleteGame();
+            DeleteAchievement();
         })
 
     </script>
